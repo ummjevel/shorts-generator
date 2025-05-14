@@ -2,10 +2,12 @@
 reddit:
   subreddits:
     - "AskReddit"
+    - "ChatGPT"
+    - "whatisit"
     - "todayilearned"
     - "interestingasfuck"
   post_limit: 10
-  min_upvotes: 1000
+  min_upvotes: 100
   time_filter: "day"  # hour, day, week, month, year, all
   max_files_per_subreddit: 5  # 각 서브레딧당 최대 저장 파일 수
   exclude_video_posts: true  # 비디오 게시물 제외 여부
@@ -22,7 +24,7 @@ content:
     temperature: 0.7
   tts:
     engine: "gtts"  # gtts, pyttsx3
-    language: "ko"
+    language: "en"
     slow: false
 
 # 비디오 설정
@@ -43,4 +45,23 @@ output:
   base_dir: "output"
   images_dir: "images"
   audio_dir: "audio"
-  videos_dir: "videos" 
+  videos_dir: "videos"
+
+# Add LLM settings
+llm:
+  model_name: "distilgpt2" 
+  max_tokens: 150
+  temperature: 0.7
+  # You might add settings like 'device' for GPU acceleration if using transformers
+  # device: "cuda" # or "cpu"
+
+# Configuration for Shorts Generator
+content_generation:
+  image:
+    width: 720
+    height: 1280
+    # font_path: null # Specify a path to a .ttf font file, or leave null to use default
+    # colors: { cyan: [0, 153, 153], red: [255, 51, 51], white: [255, 255, 255], black: [0, 0, 0] }
+
+video_generation:
+  # Add video generation settings later (e.g., fps, duration per image) 

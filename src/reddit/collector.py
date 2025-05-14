@@ -85,6 +85,26 @@ class RedditCollector:
             top_comments = comments[:limit]
             comment_data_list = []
             for comment in top_comments:
+                # Initialize basic comment data
+                comment_data: Dict[str, Any] = {
+                    'id': comment.id if hasattr(comment, 'id') else None,
+                    'body': comment.body if hasattr(comment, 'body') else '', # Use empty string if body missing
+                    'score': comment.score if hasattr(comment, 'score') else 0,
+                    'created_utc': datetime.fromtimestamp(comment.created_utc) if hasattr(comment, 'created_utc') else None,
+                    'author': str(comment.author) if hasattr(comment, 'author') else '[Deleted]', # Use [Deleted] if author missing
+                    'is_submitter': comment.is_submitter if hasattr(comment, 'is_submitter') else False,
+                    'stickied': comment.stickied if hasattr(comment, 'stickied') else False
+                }
+
+                # Add media/image related fields if they exist
+                if hasattr(comment, 'media') and comment.media:
+                    # PRAW media is often a dictionary, convert to serializable form
+                    comment_data['media'] = dict(comment.media) if isinstance(comment.media, dict) else str(comment.media) # Convert to dict or string
+
+                if hasattr(comment, 'media_metadata') and comment.media_metadata:
+                    # media_metadata is a dictionary of dictionaries, should be serializable
+                    comment_data['media_metadata'] = comment.media_metadata
+
                 comment_data = {
                     'id': comment.id,
                     'body': comment.body,
