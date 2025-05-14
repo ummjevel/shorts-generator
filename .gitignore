@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+
+# VSCode
+.vscode/
+
+# 환경 변수 파일
+.env
+
+# OS
+.DS_Store
+
+# 로그/출력
+*.log
+output/

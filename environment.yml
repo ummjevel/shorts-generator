@@ -1,0 +1,16 @@
+name: shorts-generator
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - praw==7.7.1
+    - python-dotenv==1.0.0
+    - openai==1.12.0
+    - moviepy==1.0.3
+    - Pillow==10.2.0
+    - requests==2.31.0
+    - python-slugify==8.0.1
+    - loguru==0.7.2 

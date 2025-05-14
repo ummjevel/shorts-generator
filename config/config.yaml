@@ -1,0 +1,46 @@
+# Reddit 설정
+reddit:
+  subreddits:
+    - "AskReddit"
+    - "todayilearned"
+    - "interestingasfuck"
+  post_limit: 10
+  min_upvotes: 1000
+  time_filter: "day"  # hour, day, week, month, year, all
+  max_files_per_subreddit: 5  # 각 서브레딧당 최대 저장 파일 수
+  exclude_video_posts: true  # 비디오 게시물 제외 여부
+
+# 콘텐츠 생성 설정
+content:
+  max_length: 60  # 초 단위
+  style:
+    tone: "casual"
+    language: "ko"
+  model:
+    name: "mistralai/Mistral-7B-Instruct-v0.2"
+    max_length: 512
+    temperature: 0.7
+  tts:
+    engine: "gtts"  # gtts, pyttsx3
+    language: "ko"
+    slow: false
+
+# 비디오 설정
+video:
+  resolution:
+    width: 1080
+    height: 1920
+  fps: 30
+  format: "mp4"
+  background_color: "#000000"
+  font:
+    family: "Arial"
+    size: 60
+    color: "#FFFFFF"
+
+# 출력 설정
+output:
+  base_dir: "output"
+  images_dir: "images"
+  audio_dir: "audio"
+  videos_dir: "videos" 
