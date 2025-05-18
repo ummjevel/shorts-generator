@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
     # 업데이트된 find_latest_json_data 함수를 사용하여 최신 파일 목록을 가져옵니다.
     latest_data_files = find_latest_json_data(output_base_dir)
-    latest_data_files = [latest_data_files[0]]
+    # latest_data_files = [latest_data_files[0]]
     if not latest_data_files:
         logger.error("처리할 데이터 파일을 찾지 못했습니다. 종료합니다.")
         exit()
