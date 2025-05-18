@@ -26,6 +26,7 @@ content:
     engine: "gtts"  # gtts, pyttsx3
     language: "en"
     slow: false
+    speed_factor: 1.0
 
 # 비디오 설정
 video:

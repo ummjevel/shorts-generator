@@ -256,7 +256,7 @@ class ContentImageGenerator:
         url_pattern = re.compile(r'\b(?:https?://|www\.)\S+|\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/[^\s]*)?\b')
         return url_pattern.sub('', text).strip() # Also strip whitespace left by removed URL
 
-    def generate_post_only_image(self, post: Dict, idx=0):
+    def generate_post_only_image(self, post: Dict, idx=0, text_content="", image_type="", image_name_suffix=""):
         """Generate image with post title and body only."""
         img = Image.new("RGB", (self.width, self.height), COLOR_WHITE)
         draw = ImageDraw.Draw(img)
@@ -273,7 +273,7 @@ class ContentImageGenerator:
         # 제목
         title_start_y = header_height + padding
         # Determine title font size based on content
-        has_body = post.get('selftext', '').strip() != ''
+        has_body = text_content != ''
         # Safely determine if an image is available
         has_image = False
         try:
@@ -294,7 +294,7 @@ class ContentImageGenerator:
         
         font_title = self._get_font(font_title_size)
         title_max_width = self.width - 2 * padding
-        current_y = self._draw_multiline(draw, post.get('title', ''), (padding, title_start_y), font_title, COLOR_BLACK, title_max_width, max_lines=None, line_spacing=15)
+        current_y = self._draw_multiline(draw, text_content, (padding, title_start_y), font_title, COLOR_BLACK, title_max_width, max_lines=None, line_spacing=15)
         current_y += padding # Add space below title
 
         # Find and add image if available
@@ -312,7 +312,7 @@ class ContentImageGenerator:
                 aspect_ratio = img_width / img_height
 
                 # Check body length condition
-                body = post.get('selftext', '').strip()
+                body = text_content
                 is_body_short_or_empty = len(body) <= 100
 
                 # Condition to increase image size: taller image AND body is short or empty
@@ -771,13 +771,14 @@ class ContentImageGenerator:
         cleaned_title = self._remove_urls(post_title)
         cleaned_body = self._remove_urls(post_body)
 
-        # --- Image 1: Title --- 
+        # --- Image 1: Title ---
         # Use cleaned_title for image generation
-        title_image_path = self._draw_text_image(
-            f"r/{post_data.get('subreddit', 'N/A')}", # Subreddit at the top
-            cleaned_title, 
-            image_name=f"post_{self.current_post_index}_{post_id}_title_1.png", # Include index for sorting
-            is_title=True
+        title_image_path = self.generate_post_only_image(
+            post_data, # Pass the entire post data dictionary
+            idx=self.current_post_index, # Use the stored post index
+            text_content=cleaned_title,
+            image_type="title", # Indicate this is for the title
+            image_name_suffix="title_1" # Suffix for the filename
         )
         image_paths = [title_image_path] if title_image_path else []
         
@@ -786,10 +787,12 @@ class ContentImageGenerator:
             # Need to handle long body text potentially split into multiple images
             # For simplicity, let's generate one image for the body for now
             # In a real scenario, you'd split the body into chunks and generate an image for each chunk
-            body_image_path = self._draw_text_image(
-                "", # No header for body parts
-                cleaned_body,
-                image_name=f"post_{self.current_post_index}_{post_id}_body_1.png" # Include index and part number
+            body_image_path = self.generate_post_only_image(
+                post_data, # Pass the entire post data dictionary
+                idx=self.current_post_index, # Use the stored post index
+                text_content=cleaned_body,
+                image_type="body", # Indicate this is for the body
+                image_name_suffix="body_1" # Suffix for the filename
             )
             if body_image_path: image_paths.append(body_image_path)
 
@@ -829,7 +832,7 @@ class ContentImageGenerator:
                  while start_line_index < len(wrapped_comment_lines):
                      # Generate images for parts of the comment
                      filepath, next_start_line_index = self.generate_comment_image_part(
-                         post, # Pass post data for header
+                         post_data, # Pass post data for header
                          comment, # Pass comment data
                          wrapped_comment_lines, # Pass the pre-wrapped lines
                          start_line_index,
